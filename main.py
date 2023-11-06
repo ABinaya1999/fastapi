@@ -1,38 +1,28 @@
 from fastapi import FastAPI
 from fastapi.params import Body
 from pydantic import BaseModel
-from random import randrange
+from typing import Optional
 
 app = FastAPI()
 
 class Post(BaseModel):
-    sport:str
-    best_player:str
+    name:str
+    age:int
+    single : bool= True
+    rating : Optional[int]=None
     
-my_posts=[{"sport":"cricket","best_player":"ab","id":1}]
 
-def find_post(id):
-    for p in my_posts:
-        if p['id']==id:
-            return p
-        
-        
 @app.get("/")
-async def root():
-    return {'message':'Hello binay raj parajuli'}
-    
-@app.get("/posts")
-def root(): 
-    return {'msg':my_posts}
+def read():
+    return {'message':'Hello'}
 
-@app.post("/posts")
-def create_post(post:Post):
-    post_dict=post.dict()
-    post_dict['id']=randrange(0,1000)
-    my_posts.append(post_dict)
-    return {"new_post":post_dict} 
-                
-@app.get("/posts/{id:int}")
-def get_post(id):
-    post=find_post(int(id))
-    return {"one post":post}
+
+@app.post("/create")
+def create(payload: Post):
+    print(payload.rating)
+    return {'message':f"name {payload.name.capitalize()} age {payload.age} single {payload.single} {payload.rating}"}
+
+        
+        
+
+
